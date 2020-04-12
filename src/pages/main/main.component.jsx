@@ -6,21 +6,30 @@ import 'firebase/firestore';
 
 const firestore = firebase.firestore();
 
-const MainComp = () => {
-    // const [user, setUser] = useState(null);
+const MainComp = ({ currentUser }) => {
     const [postas, setPostas] = useState(null);
-    // unsubscribeFromAuth = null;
 
     useEffect(() => {
         const fetchFunc = async () => {
             const response = await firestore.collection('/postas').get();
-            setPostas(response);
+            setPostas(response.docs.map(doc => doc.data()));
         }
         fetchFunc();
     }, []);
 
+    useEffect(() => {console.log(postas)},[postas]);
+
     return (
-        <customSelect values={postas} />
+        currentUser ? 
+        <button onClick={ ()=> auth.signOut() }>Sign out</button> :
+        <button onClick={ signInWithGoogle }>Sign in with Google</button>
+
+        
+        // <select name="postas" id="postas">
+        //     {/* {postas ? 
+        //     postas.map(posta => )
+        // } */}
+        // </select>
     );
 }
 
