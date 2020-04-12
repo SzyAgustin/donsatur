@@ -20,9 +20,7 @@ const MainComp = () => {
     }, []);
 
     return (
-        postas ? postas.docs.map(doc => {
-            <h1>{ doc.data().nombre }</h1>
-        }) : <h1>aaa</h1>
+        <customSelect values={postas} />
     );
 }
 
