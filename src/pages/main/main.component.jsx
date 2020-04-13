@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { signInWithGoogle } from '../../firebase/firebase.utils';
-import { auth } from '../../firebase/firebase.utils';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import SignUpButton from '../../components/sign-up-button/sign-up-button.component';
+import PostasSelect from '../../components/postas-select/postas-select.component';
+import ChooseTurno from '../../components/choose-turno/choose-turno.component';
 
 const firestore = firebase.firestore();
 
 const MainComp = ({ currentUser }) => {
     const [postas, setPostas] = useState(null);
+    const [postaSelected, setPostaSelected] = useState(null);
+
 
     useEffect(() => {
         const fetchFunc = async () => {
@@ -17,19 +20,22 @@ const MainComp = ({ currentUser }) => {
         fetchFunc();
     }, []);
 
-    useEffect(() => {console.log(postas)},[postas]);
+    useEffect(() => { console.log(postas) }, [postas]);
+    useEffect(() => { console.log(postaSelected) }, [postaSelected]);
+
+    function handleChange(selectedValue) {
+        setPostaSelected(selectedValue);
+    }
 
     return (
-        currentUser ? 
-        <button onClick={ ()=> auth.signOut() }>Sign out</button> :
-        <button onClick={ signInWithGoogle }>Sign in with Google</button>
+        <div>
+            <SignUpButton currentUser={currentUser} />
+            <p></p>
+            <PostasSelect postas={postas} onSelectChange={handleChange} />
+            <p></p>
+            <ChooseTurno postaSelected={postaSelected} />
 
-        
-        // <select name="postas" id="postas">
-        //     {/* {postas ? 
-        //     postas.map(posta => )
-        // } */}
-        // </select>
+        </div>
     );
 }
 
