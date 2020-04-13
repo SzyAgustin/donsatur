@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import DatePicker from "react-datepicker";
+import setHours from "date-fns/setHours";
+import setMinutes from "date-fns/setMinutes";
+ 
+import "react-datepicker/dist/react-datepicker.css";
 
 const firestore = firebase.firestore();
 
 const ChooseTurno = ({ postaSelected }) => {
     const [turnos, setTurnos] = useState(null);
+    const [dateSelected, setDateSelected] = useState(null);
 
     useEffect(() => {
         const fetchFunc = async () => {
@@ -18,12 +24,17 @@ const ChooseTurno = ({ postaSelected }) => {
     useEffect(() => {
         console.log(turnos)
     }, [turnos]);
+
+    function handleChange(date){
+        setDateSelected(date);
+        console.log(date);
+    }
     
     return (
         postaSelected ? 
-        <div> {postaSelected} </div> :
+        <DatePicker selected={dateSelected} onChange={handleChange} />
+        :
         <p></p>
-
     );
 }
 
