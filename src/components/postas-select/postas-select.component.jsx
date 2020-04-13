@@ -8,7 +8,7 @@ const PostasSelect = ({ postas, onSelectChange }) => {
 
     useEffect(() => {
         if(postas){
-            onSelectChange(postas[0].nombre);
+            onSelectChange(postas[0].id);
         } 
     }, [postas]);
 
@@ -17,10 +17,10 @@ const PostasSelect = ({ postas, onSelectChange }) => {
             <select name="postas" id="postas" onChange={handleChange} >
                 {
                     postas.map((posta) =>
-                        <option key={posta.id} value={posta.nombre}>
+                        <option key={posta.id} value={posta.id}>
                             {posta.nombre}
                         </option>)
-                }
+                }  
             </select> :
             <p></p>
     );

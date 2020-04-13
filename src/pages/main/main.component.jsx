@@ -15,13 +15,14 @@ const MainComp = ({ currentUser }) => {
     useEffect(() => {
         const fetchFunc = async () => {
             const response = await firestore.collection('/postas').get();
+            console.log(response.docs.map(doc => doc.data()));
             setPostas(response.docs.map(doc => doc.data()));
         }
         fetchFunc();
     }, []);
 
-    useEffect(() => { console.log(postas) }, [postas]);
-    useEffect(() => { console.log(postaSelected) }, [postaSelected]);
+    // useEffect(() => { console.log(postas) }, [postas]);
+    // useEffect(() => { console.log(postaSelected) }, [postaSelected]);
 
     function handleChange(selectedValue) {
         setPostaSelected(selectedValue);

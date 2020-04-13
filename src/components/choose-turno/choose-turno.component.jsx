@@ -9,16 +9,16 @@ const ChooseTurno = ({ postaSelected }) => {
 
     useEffect(() => {
         const fetchFunc = async () => {
-            const response = await firestore.collection('/turnos').get();
+            const response = await firestore.collection('/turnos').where("postaId", "==", postaSelected).get();
             setTurnos(response.docs.map(doc => doc.data()));
         }
         fetchFunc();
-    }, []);
+    }, [postaSelected]);
 
     useEffect(() => {
         console.log(turnos)
     }, [turnos]);
-
+    
     return (
         postaSelected ? 
         <div> {postaSelected} </div> :
