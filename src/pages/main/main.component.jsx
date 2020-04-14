@@ -18,8 +18,9 @@ const firestore = firebase.firestore();
 const MainComp = () => {
     const dispatch = useDispatch();
     const turnosOfPosta2 = useSelector(state => state.general.turnosOfPosta2);
-    const dateSelected = useSelector(state => state.form.date);
-    // const turnosOfDateSelected = useSelector(state => state.general.turnosOfDateSelected);
+    const dateSelected = useSelector(state => state.form.dateSelected);
+    const turnosOfDateSelected = useSelector(state => state.general.turnosOfDateSelected);
+    const [hoursDisabled, setHoursDisabled] = useState([]);
 
     // const [turnosOfDateSelected, setTurnosOfDateSelected] = useState(null);
 
@@ -38,7 +39,7 @@ const MainComp = () => {
 
     useEffect(() => {
         console.log(turnosOfPosta2);
-        if (turnosOfPosta2){
+        if (turnosOfPosta2) {
             console.log(turnosOfPosta2[0].fecha);
         }
 
@@ -51,13 +52,13 @@ const MainComp = () => {
     useEffect(() => {
         if (turnosOfPosta2) { //ESTO HAY QUE ARREGLARLO. CAPAZ CON UN OBSERVABLE
             const days = turnosOfPosta2.map(turno => new Date(turno.fecha.seconds * 1000));
-            dispatch(setTurnosOfDateSelected(days.filter(date => date.setHours(0,0,0,0) == dateSelected.setHours(0,0,0,0) )));
+            dispatch(setTurnosOfDateSelected(days.filter(date => date.getDate() === dateSelected.getDate() && date.getMonth() === dateSelected.getMonth() && date.getFullYear() === dateSelected.getFullYear())));
         }
     }, [dateSelected])
 
-    // useEffect(() => {
-    //     console.log(turnosOfDateSelected)
-    // }, [turnosOfDateSelected])
+
+
+
 
 
     return (
@@ -68,10 +69,13 @@ const MainComp = () => {
             <p></p> */}
             <DatePicker selected={dateSelected}
                 minDate={new Date()}
+                excludeTimes={turnosOfDateSelected}
                 onChange={date => dispatch(setDate(date))}
+                showTimeSelect
+                minTime={setHours(setMinutes(new Date(), 0), 8)}
+                maxTime={setHours(setMinutes(new Date(), 0), 18)}
+                dateFormat="MMMM d, yyyy h:mm aa"
             />
-
-            {/* <CustomTimePicker /> */}
 
 
 
