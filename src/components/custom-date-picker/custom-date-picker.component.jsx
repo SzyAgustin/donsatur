@@ -1,16 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTurnosNotAvailable } from "../../redux/general/general.actions";
+import { setDate } from "../../redux/form/form.actions";
 import DatePicker from "react-datepicker";
+import { addDays, addMinutes } from "date-fns";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
-import { setDate } from "../../redux/form/form.actions";
+import setSeconds from "date-fns/setSeconds";
+import setMilliseconds from "date-fns/setMilliseconds";
+
 
 const CustomDatePicker = () => {
   const dispatch = useDispatch();
   const turnosOfPosta2 = useSelector((state) => state.general.turnosOfPosta2);
   const dateSelected = useSelector((state) => state.form.dateSelected);
-  const turnosNotAvailables = useSelector(
+  const turnosNotAvailable = useSelector(
     (state) => state.general.turnosNotAvailable
   );
 
@@ -20,23 +24,26 @@ const CustomDatePicker = () => {
       return total;
     }, {});
 
-    var result2 = Object.keys(result).map(function(key) {
+    var result2 = Object.keys(result).map(function (key) {
       return [new Date(key), result[key]];
     });
     return result2;
-  }
+  };
 
-  const getTurnosNotAvailables = (listOfTurnos, limit) => {
-      const groupedBy = groupByCount(listOfTurnos);
-      const filtered =  groupedBy.filter(turno => turno[1] >= limit );
-      const arrayOfDates = filtered.map(turno => turno[0]);
-      return arrayOfDates;
-  }
-
-
+  const getTurnosNotAvailable = (listOfTurnos, limit) => {
+    const groupedBy = groupByCount(listOfTurnos);
+    const filtered = groupedBy.filter((turno) => turno[1] >= limit);
+    const arrayOfDates = filtered.map((turno) => turno[0]);
+    return arrayOfDates;
+  };
 
   useEffect(() => {
-    if (turnosOfPosta2) {
+      dispatch(setDate(setHours(setMinutes(setSeconds(setMilliseconds(addDays(new Date(), 1),0),0), 0), 8)));
+  }, [turnosOfPosta2]);
+
+  useEffect(() => {
+    console.log(dateSelected);
+    if (turnosOfPosta2 && dateSelected) {
       //ESTO HAY QUE ARREGLARLO. CAPAZ CON UN OBSERVABLE
       const days = turnosOfPosta2.map(
         (turno) => new Date(turno.fecha.seconds * 1000)
@@ -49,17 +56,14 @@ const CustomDatePicker = () => {
           date.getFullYear() === dateSelected.getFullYear()
       );
 
-      dispatch(
-        setTurnosNotAvailable(
-          getTurnosNotAvailables(allTurnos, 2)
-        )
-      );
+      dispatch(setTurnosNotAvailable(getTurnosNotAvailable(allTurnos, 6)));
     }
-  }, [dateSelected]);
+  }, [dateSelected, turnosOfPosta2]);
 
   useEffect(() => {
-    console.log(turnosNotAvailables);
-  }, [turnosNotAvailables]);
+    
+  },[turnosNotAvailable])
+
 
   function onDatepickerRef(el) {
     if (el && el.input) {
@@ -70,8 +74,8 @@ const CustomDatePicker = () => {
   return (
     <DatePicker
       selected={dateSelected}
-      minDate={new Date()}
-      excludeTimes={turnosNotAvailables}
+      minDate={addDays(new Date(), 1)}
+      excludeTimes={turnosNotAvailable}
       onChange={(date) => dispatch(setDate(date))}
       showTimeSelect
       minTime={setHours(setMinutes(new Date(), 0), 8)}

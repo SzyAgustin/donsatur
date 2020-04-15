@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,7 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CustomDatePicker from "../custom-date-picker/custom-date-picker.component";
-import TurnoService from '../../services/turno.service';
+import TurnoService from "../../services/turno.service";
+import { firestore } from '../../firebase/firebase.utils';
 
 function Copyright() {
   return (
@@ -47,11 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const FormTurno = () => {
-  
-
   const handleOnChange = (e) => {
     e.persist();
     setInputs((prev) => ({
@@ -75,15 +72,30 @@ const FormTurno = () => {
     name: "",
     lastName: "",
     age: 18,
-    email: ""
+    email: "",
   });
-
 
   const date = useSelector((state) => state.form.dateSelected);
 
-  const submitTurno =  async (e) => {
+  const submitTurno = async (e) => {
     e.preventDefault();
-    TurnoService.setTurno({...inputs, date});
+    console.log(date);
+    // TurnoService.setTurno({...inputs, date});
+    firestore.collection("turnos")
+      .add({
+        nombre: inputs.name,
+        apellido: inputs.lastName,
+        edad: inputs.age,
+        email: inputs.email,
+        fecha: date,
+        postaId: "2",
+      })
+      .then(function () {
+        console.log("Document successfully written!");
+      })
+      .catch(function (error) {
+        console.error("Error writing document: ", error);
+      });
   };
 
   const classes = useStyles();
@@ -92,9 +104,7 @@ const FormTurno = () => {
     <Container component="main" maxWidth="sm">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        <img src={require('../../assets/donarg-icon.png')}/>
         <Typography component="h1" variant="h5">
           Donarg Turnos
         </Typography>

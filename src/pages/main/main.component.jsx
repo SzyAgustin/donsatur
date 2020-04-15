@@ -3,8 +3,8 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { setTurnosOfPosta2 } from "../../redux/general/general.actions";
-import { setDate } from "../../redux/form/form.actions";
 import FormTurno from "../../components/form/form-turno.component";
+import { addDays } from 'date-fns';
 
 const firestore = firebase.firestore();
 
@@ -17,12 +17,7 @@ const MainComp = () => {
         .collection("/turnos")
         .where("postaId", "==", "2")
         .get();
-      console.log(response.docs.map((doc) => doc.data()));
       dispatch(setTurnosOfPosta2(response.docs.map((doc) => doc.data())));
-
-      const today = new Date();
-      today.setHours(8, 0, 0, 0);
-      dispatch(setDate(today));
     };
     fetchFunc();
   }, []);
