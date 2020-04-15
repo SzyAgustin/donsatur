@@ -21,7 +21,7 @@ const MainComp = () => {
       dispatch(setTurnosOfPosta2(response.docs.map((doc) => doc.data())));
 
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      today.setHours(8, 0, 0, 0);
       dispatch(setDate(today));
     };
     fetchFunc();

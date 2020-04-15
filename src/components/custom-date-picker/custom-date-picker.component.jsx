@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setTurnosOfDateSelected } from "../../redux/general/general.actions";
+import { setTurnosNotAvailable } from "../../redux/general/general.actions";
 import DatePicker from "react-datepicker";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
@@ -50,8 +50,8 @@ const CustomDatePicker = () => {
       );
 
       dispatch(
-        setTurnosOfDateSelected(
-          getTurnosNotAvailables(allTurnos, 5)
+        setTurnosNotAvailable(
+          getTurnosNotAvailables(allTurnos, 2)
         )
       );
     }
@@ -75,7 +75,7 @@ const CustomDatePicker = () => {
       onChange={(date) => dispatch(setDate(date))}
       showTimeSelect
       minTime={setHours(setMinutes(new Date(), 0), 8)}
-      maxTime={setHours(setMinutes(new Date(), 0), 18)}
+      maxTime={setHours(setMinutes(new Date(), 30), 12)}
       dateFormat="MMMM d, yyyy h:mm aa"
       ref={(el) => onDatepickerRef(el)}
     />

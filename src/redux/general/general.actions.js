@@ -10,7 +10,7 @@ export const setTurnosOfPosta2 = turnosOfPosta2 => ({
     payload: turnosOfPosta2
 });
 
-export const setTurnosOfDateSelected = turnosNotAvailable => ({
+export const setTurnosNotAvailable = turnosNotAvailable => ({
     type: GeneralActionTypes.SET_TURNOS_NOT_AVAILABLE,
     payload: turnosNotAvailable
 });
