@@ -32,11 +32,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-
-          <MainComp />
-
-      </header>
+        <MainComp />
     </div>
   );
 }
