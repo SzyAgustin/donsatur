@@ -26,7 +26,7 @@ const CustomDatePicker = () => {
     return result2;
   }
 
-  const getMoreThanLimit = (listOfTurnos, limit) => {
+  const getTurnosNotAvailables = (listOfTurnos, limit) => {
       const groupedBy = groupByCount(listOfTurnos);
       const filtered =  groupedBy.filter(turno => turno[1] >= limit );
       const arrayOfDates = filtered.map(turno => turno[0]);
@@ -51,7 +51,7 @@ const CustomDatePicker = () => {
 
       dispatch(
         setTurnosOfDateSelected(
-          getMoreThanLimit(allTurnos, 5)
+          getTurnosNotAvailables(allTurnos, 5)
         )
       );
     }
