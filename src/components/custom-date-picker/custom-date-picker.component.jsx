@@ -33,6 +33,8 @@ const CustomDatePicker = () => {
     }
   }, [dateSelected]);
 
+  function onDatepickerRef(el) { if (el && el.input) { el.input.readOnly = true; } }
+
   return (
     <DatePicker
       selected={dateSelected}
@@ -43,6 +45,7 @@ const CustomDatePicker = () => {
       minTime={setHours(setMinutes(new Date(), 0), 8)}
       maxTime={setHours(setMinutes(new Date(), 0), 18)}
       dateFormat="MMMM d, yyyy h:mm aa"
+      ref={el => onDatepickerRef(el)}
     />
   );
 };
