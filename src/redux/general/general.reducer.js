@@ -3,7 +3,7 @@ import { GeneralActionTypes } from './general.types';
 const INITIAL_STATE = {
     postas: null,
     turnosOfPosta2: null,
-    turnosOfDateSelected: null
+    turnosNotAvailable: null
 };
 
 const generalReducer = (state = INITIAL_STATE, action) => {
@@ -18,10 +18,10 @@ const generalReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 turnosOfPosta2: action.payload
             }
-        case GeneralActionTypes.SET_TURNOS_OF_DATE_SELECTED:
+        case GeneralActionTypes.SET_TURNOS_NOT_AVAILABLE:
             return {
                 ...state,
-                turnosOfDateSelected: action.payload
+                turnosNotAvailable: action.payload
             }
         default:
             return state
