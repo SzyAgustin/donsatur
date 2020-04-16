@@ -14,6 +14,7 @@ import Container from "@material-ui/core/Container";
 import CustomDatePicker from "../custom-date-picker/custom-date-picker.component";
 import TurnoService from "../../services/turno.service";
 import { firestore } from '../../firebase/firebase.utils';
+import { withRouter } from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FormTurno = () => {
+const FormTurno = (props) => {
   const handleOnChange = (e) => {
     e.persist();
     setInputs((prev) => ({
@@ -92,6 +93,7 @@ const FormTurno = () => {
       })
       .then(function () {
         console.log("Document successfully written!");
+        props.history.push('/success');
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -189,4 +191,4 @@ const FormTurno = () => {
   );
 };
 
-export default FormTurno;
+export default withRouter(FormTurno);
