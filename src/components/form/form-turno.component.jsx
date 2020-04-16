@@ -13,8 +13,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CustomDatePicker from "../custom-date-picker/custom-date-picker.component";
 import TurnoService from "../../services/turno.service";
-import { firestore } from '../../firebase/firebase.utils';
-import { withRouter } from 'react-router-dom';
+import { firestore } from "../../firebase/firebase.utils";
+import { withRouter } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FormTurno = (props) => {
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
   const handleOnChange = (e) => {
     e.persist();
     setInputs((prev) => ({
@@ -74,15 +76,26 @@ const FormTurno = (props) => {
     lastName: "",
     age: 18,
     email: "",
+    documentId: "",
   });
 
   const date = useSelector((state) => state.form.dateSelected);
 
   const submitTurno = async (e) => {
     e.preventDefault();
-    console.log(date);
-    // TurnoService.setTurno({...inputs, date});
-    firestore.collection("turnos")
+
+    const response = await firestore
+      .collection("turnos")
+      .where("fecha", "==", date)
+      .where("postaId", "==", "2")
+      .get();
+
+    if (response.docs.length >= 6) {
+      console.log("Todos los turnos en esa fecha y horario ya fueron tomados");
+      return; //devolver modal que diga que ya estan todos los turnos seleccionados en esa fecha y horario, que seleccione otro
+    }
+    firestore
+      .collection("turnos")
       .add({
         nombre: inputs.name,
         apellido: inputs.lastName,
@@ -93,7 +106,8 @@ const FormTurno = (props) => {
       })
       .then(function () {
         console.log("Document successfully written!");
-        props.history.push('/success');
+
+        props.history.push("/success");
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -106,7 +120,7 @@ const FormTurno = (props) => {
     <Container component="main" maxWidth="sm">
       <CssBaseline />
       <div className={classes.paper}>
-        <img src={require('../../assets/donarg-icon.png')}/>
+        <img src={require("../../assets/donarg-icon.png")} />
         <Typography component="h1" variant="h5">
           Donarg Turnos
         </Typography>
@@ -117,7 +131,7 @@ const FormTurno = (props) => {
           onSubmit={submitTurno}
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
                 name="name"
@@ -131,7 +145,7 @@ const FormTurno = (props) => {
                 value={inputs.name}
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
@@ -144,7 +158,20 @@ const FormTurno = (props) => {
                 value={inputs.lastName}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={8}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="documentId"
+                label="D.N.I."
+                name="documentId"
+                autoComplete="lname"
+                onChange={handleOnChange}
+                value={inputs.documentId}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant="outlined"
                 required
@@ -181,6 +208,7 @@ const FormTurno = (props) => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={buttonDisabled}
           >
             Solicitar Turno
           </Button>
